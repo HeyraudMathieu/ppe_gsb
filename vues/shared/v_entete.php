@@ -56,6 +56,7 @@
                                     Accueil
                                 </a>
                             </li>
+                            <?php if($_SESSION['droit'] == 1) { ?>
                             <li <?php if ($uc == 'gererFrais') { ?>class="active"<?php } ?>>
                                 <a href="index.php?uc=gererFrais&action=saisirFrais">
                                     <span class="glyphicon glyphicon-pencil"></span>
@@ -68,8 +69,9 @@
                                     Afficher mes fiches de frais
                                 </a>
                             </li>
-                            <li 
-                            <?php if ($uc == 'deconnexion') { ?>class="active"<?php } ?>>
+                            <?php } else if($_SESSION['droit'] == 2){ ?>
+                            <?php } ?>
+                            <li <?php if ($uc == 'deconnexion') { ?>class="active"<?php } ?>>
                                 <a href="index.php?uc=deconnexion&action=demandeDeconnexion">
                                     <span class="glyphicon glyphicon-log-out"></span>
                                     Déconnexion
