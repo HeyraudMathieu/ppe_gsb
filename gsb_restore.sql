@@ -109,3 +109,21 @@ INSERT INTO visiteur (id, nom, prenom, login, mdp, adresse, cp, ville, dateembau
 ('f21', 'Finck', 'Jacques', 'jfinck', 'mpb3t', '10 avenue du Prado', '13002', 'Marseille', '2001-11-10'),
 ('f39', 'Frémont', 'Fernande', 'ffremont', 'xs5tq', '4 route de la mer', '13012', 'Allauh', '1998-10-01'),
 ('f4', 'Gest', 'Alain', 'agest', 'dywvt', '30 avenue de la mer', '13025', 'Berre', '1985-11-01');
+
+-- Différencier visiteur et comptable --
+CREATE TABLE IF NOT EXISTS droit (
+  id int(11) NOT NULL auto_increment,
+  libelle varchar(100) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
+insert into droit(libelle)values('Visiteur');
+insert into droit(libelle)values('Comptable');
+
+alter table visiteur add column iddroit int not null default 1;
+alter table visiteur add foreign key (iddroit) references droit(id);
+
+update visiteur
+set iddroit = 2
+where id in('a17','b34','e39');
+----------------------------------------
