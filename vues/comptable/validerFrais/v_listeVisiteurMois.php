@@ -48,7 +48,6 @@
         $('#visiteur').val(ui.item.label);
         $('#visiteur').attr('value', ui.item.valeur);
         recupere_mois();
-        degrise_mois();
         return false;
     }
     
@@ -81,6 +80,7 @@
                         text : item.label 
                     }));
                 });
+                degrise_mois();
             },
             error: function (xhr, thrownError) {
                 console.log(xhr.statusText);
