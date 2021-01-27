@@ -15,7 +15,7 @@
  */
 
 if ($estConnecte) {
-    include 'vues/visiteur/v_accueil.php';
+    include 'vues/visiteur/accueil/v_accueil.php';
 } else {
     include 'vues/v_connexion.php';
 }
