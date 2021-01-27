@@ -21,7 +21,7 @@ $pdo = PdoGsb::getPdoGsb();
 $estConnecte = estConnecte();
 require 'vues/v_entete.php';
 $uc = filter_input(INPUT_GET, 'uc', FILTER_SANITIZE_STRING);
-if ($uc && !$estConnecte) {
+if (!$estConnecte) {
     $uc = 'connexion';
 } elseif (empty($uc)) {
     $uc = 'accueil';
@@ -30,17 +30,33 @@ switch ($uc) {
 case 'connexion':
     include 'controleurs/c_connexion.php';
     break;
-case 'accueil':
-    include 'controleurs/c_accueil.php';
-    break;
-case 'gererFrais':
-    include 'controleurs/c_gererFrais.php';
-    break;
-case 'etatFrais':
-    include 'controleurs/c_etatFrais.php';
-    break;
 case 'deconnexion':
     include 'controleurs/c_deconnexion.php';
+    break;
+default :
+    if($_SESSION['droit'] == 1){
+        switch ($uc) {
+            case 'accueil':
+                include 'controleurs/visiteur/c_accueil.php';
+                break;
+            case 'gererFrais':
+                include 'controleurs/visiteur/c_gererFrais.php';
+                break;
+            case 'etatFrais':
+                include 'controleurs/visiteur/c_etatFrais.php';
+                break;
+            default :
+                break;
+        }
+    } else if($_SESSION['droit'] == 2){
+        switch ($uc) {
+            case 'accueil':
+                include 'controleurs/comptable/c_accueil.php';
+                break;
+            default :
+                break;
+        }
+    }
     break;
 }
 require 'vues/v_pied.php';
