@@ -70,6 +70,12 @@
                                 </a>
                             </li>
                             <?php } else if($_SESSION['droit'] == 2){ ?>
+                            <li <?php if ($uc == 'validerFrais') { ?>class="active"<?php } ?>>
+                                <a href="index.php?uc=validerFrais&action=selectionnerVisiteurMois">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                    Valider les fiches de frais
+                                </a>
+                            </li>
                             <?php } ?>
                             <li <?php if ($uc == 'deconnexion') { ?>class="active"<?php } ?>>
                                 <a href="index.php?uc=deconnexion&action=demandeDeconnexion">

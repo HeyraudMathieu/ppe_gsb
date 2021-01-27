@@ -19,7 +19,11 @@ require_once 'includes/class.pdogsb.inc.php';
 session_start();
 $pdo = PdoGsb::getPdoGsb();
 $estConnecte = estConnecte();
-require 'vues/shared/v_entete.php';
+
+if(!isset($_POST['ajax'])){
+    require 'vues/shared/v_entete.php';
+}
+
 $uc = filter_input(INPUT_GET, 'uc', FILTER_SANITIZE_STRING);
 if (!$estConnecte) {
     $uc = 'connexion';
@@ -53,10 +57,16 @@ default :
             case 'accueil':
                 include 'controleurs/comptable/c_accueil.php';
                 break;
+            case 'validerFrais':
+                include 'controleurs/comptable/c_validerFrais.php';
+                break;
             default :
                 break;
         }
     }
     break;
 }
-require 'vues/shared/v_pied.php';
+
+if(!isset($_POST['ajax'])){
+    require 'vues/shared/v_pied.php';
+}

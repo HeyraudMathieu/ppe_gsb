@@ -486,4 +486,28 @@ class PdoGsb
         $requetePrepare->bindParam(':unMois', $mois, PDO::PARAM_STR);
         $requetePrepare->execute();
     }
+    
+    public function getLesVisiteursLike($input)
+    {
+        $requetePrepare = PdoGSB::$monPdo->prepare(
+            'SELECT v.id, v.nom, v.prenom from visiteur v '
+            . 'WHERE v.nom like :input or v.prenom like :input or concat(v.nom, \' \', v.prenom) like :input'
+        );
+        $input = $input . '%';
+        $requetePrepare->bindParam(':input', $input, PDO::PARAM_STR);
+        $requetePrepare->execute();
+        $lesVisiteurs = array();
+        while ($unVisiteur = $requetePrepare->fetch()) {
+            $id = $unVisiteur['id'];
+            $nom = $unVisiteur['nom'];
+            $prenom = $unVisiteur['prenom'];
+            $lesVisiteurs[] = array(
+                'id' => $id,
+                'nom' => $nom,
+                'prenom' => $prenom
+            );
+        }
+        return $lesVisiteurs;
+    }
+    
 }
