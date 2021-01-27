@@ -21,7 +21,7 @@ if (!$uc) {
 
 switch ($action) {
 case 'demandeConnexion':
-    include 'vues/v_connexion.php';
+    include 'vues/shared/v_connexion.php';
     break;
 case 'valideConnexion':
     $login = filter_input(INPUT_POST, 'login', FILTER_SANITIZE_STRING);
@@ -29,8 +29,8 @@ case 'valideConnexion':
     $visiteur = $pdo->getInfosVisiteur($login, $mdp);
     if (!is_array($visiteur)) {
         ajouterErreur('Login ou mot de passe incorrect');
-        include 'vues/v_erreurs.php';
-        include 'vues/v_connexion.php';
+        include 'vues/shared/v_erreurs.php';
+        include 'vues/shared/v_connexion.php';
     } else {
         $id = $visiteur['id'];
         $nom = $visiteur['nom'];
@@ -41,6 +41,6 @@ case 'valideConnexion':
     }
     break;
 default:
-    include 'vues/v_connexion.php';
+    include 'vues/shared/v_connexion.php';
     break;
 }

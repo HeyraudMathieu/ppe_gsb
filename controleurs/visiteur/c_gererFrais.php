@@ -31,7 +31,7 @@ case 'validerMajFraisForfait':
         $pdo->majFraisForfait($idVisiteur, $mois, $lesFrais);
     } else {
         ajouterErreur('Les valeurs des frais doivent être numériques');
-        include 'vues/v_erreurs.php';
+        include 'vues/shared/v_erreurs.php';
     }
     break;
 case 'validerCreationFrais':
@@ -40,7 +40,7 @@ case 'validerCreationFrais':
     $montant = filter_input(INPUT_POST, 'montant', FILTER_VALIDATE_FLOAT);
     valideInfosFrais($dateFrais, $libelle, $montant);
     if (nbErreurs() != 0) {
-        include 'vues/v_erreurs.php';
+        include 'vues/shared/v_erreurs.php';
     } else {
         $pdo->creeNouveauFraisHorsForfait(
             $idVisiteur,
@@ -58,5 +58,5 @@ case 'supprimerFrais':
 }
 $lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur, $mois);
 $lesFraisForfait = $pdo->getLesFraisForfait($idVisiteur, $mois);
-require 'vues/v_listeFraisForfait.php';
-require 'vues/v_listeFraisHorsForfait.php';
+require 'vues/visiteur/gererFrais/v_listeFraisForfait.php';
+require 'vues/visiteur/gererFrais/v_listeFraisHorsForfait.php';

@@ -19,7 +19,7 @@ require_once 'includes/class.pdogsb.inc.php';
 session_start();
 $pdo = PdoGsb::getPdoGsb();
 $estConnecte = estConnecte();
-require 'vues/v_entete.php';
+require 'vues/shared/v_entete.php';
 $uc = filter_input(INPUT_GET, 'uc', FILTER_SANITIZE_STRING);
 if (!$estConnecte) {
     $uc = 'connexion';
@@ -28,10 +28,10 @@ if (!$estConnecte) {
 }
 switch ($uc) {
 case 'connexion':
-    include 'controleurs/c_connexion.php';
+    include 'controleurs/shared/c_connexion.php';
     break;
 case 'deconnexion':
-    include 'controleurs/c_deconnexion.php';
+    include 'controleurs/shared/c_deconnexion.php';
     break;
 default :
     if($_SESSION['droit'] == 1){
@@ -59,4 +59,4 @@ default :
     }
     break;
 }
-require 'vues/v_pied.php';
+require 'vues/shared/v_pied.php';
