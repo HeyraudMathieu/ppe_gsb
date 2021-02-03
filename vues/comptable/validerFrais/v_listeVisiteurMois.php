@@ -15,13 +15,16 @@
  * @link      http://www.reseaucerta.org Contexte « Laboratoire GSB »
  */
 ?>
-<h2>Validation des fiches de frais</h2>
+<h2>
+    Validation de la fiche de frais
+</h2>
+<div id="lesErreurs"></div>
 <div class="row">
     <div class="form-group col-md-12" style="line-height:2.2;">
         <div class="col-md-4">
             <label for="visiteur" class="col-md-6">Choisir le visiteur : </label>
             <div class="col-md-6">
-                <input type="text" id="visiteur" class="form-control" name="visiteur">
+                <input type="text" id="visiteur" class="form-control" name="idVisiteur">
             </div>
         </div>
         <div class="col-md-4">
@@ -33,15 +36,23 @@
         </div>
     </div>
 </div>
+<div id="lesFraisAValider"></div>
 <script>
     $(function(){
         
+        // permet de gérer l'autocomplete de l'input d'id 'visiteur'
         autocomplete('visiteur', 'getLesVisiteursLike', 'id', ['nom',' ', 'prenom']);
+        
         grise_mois();
+        
         $('#visiteur').on('input',function (){
             $('#moisFichesFraisVisiteur').empty();
             $('#visiteur').attr('value', '');
             grise_mois();
+        });
+        
+        $('#moisFichesFraisVisiteur').on('change', function (){
+            affiche_frais();
         });
     });
     
@@ -66,18 +77,17 @@
             url: "index.php?uc=validerFrais&action=recupereMois",
             dataType: "json",
             data: {
-                ajax : true,
-                visiteur: $('#visiteur').attr('value')
+                idVisiteur: $('#visiteur').attr('value')
             },
             success: function(data){
                 $('#moisFichesFraisVisiteur').empty();
                 $('#moisFichesFraisVisiteur').append($('<option>', { 
                         value: '',
-                        text : ''
+                        text : '' 
                     }));
                 $.each(data, function (i, item) {
                     $('#moisFichesFraisVisiteur').append($('<option>', { 
-                        value: item.value,
+                        value: item.valeur,
                         text : item.label 
                     }));
                 });
@@ -92,5 +102,28 @@
         });
     }
     
+    function affiche_frais(){
+        if($('#moisFichesFraisVisiteur').val() !== "" && $('#moisFichesFraisVisiteur').val() !== null){
+            $.ajax({
+                type: "POST",
+                url: "index.php?uc=validerFrais&action=afficheFrais",
+                dataType: "html",
+                data: {
+                    idVisiteur: $('#visiteur').attr('value'),
+                    mois: $('#moisFichesFraisVisiteur').val()
+                },
+                success: function(data){
+                    $('#lesFraisAValider').empty();
+                    $('#lesFraisAValider').append(data);
+                },
+                error: function (xhr, thrownError) {
+                    console.log(xhr.statusText);
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                }
+            });
+        }
+    }
     
 </script>
