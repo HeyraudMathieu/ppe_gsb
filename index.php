@@ -60,6 +60,9 @@ default :
             case 'validerFrais':
                 include 'controleurs/comptable/c_validerFrais.php';
                 break;
+            case 'suivrePaiement':
+                include 'controleurs/comptable/c_suivrePaiement.php';
+                break;
             default :
                 break;
         }
