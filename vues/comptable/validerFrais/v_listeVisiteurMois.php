@@ -24,7 +24,17 @@
         <div class="col-md-4">
             <label for="visiteur" class="col-md-6">Choisir le visiteur : </label>
             <div class="col-md-6">
-                <input type="text" id="visiteur" class="form-control" name="idVisiteur">
+                <input list="visiteur_fiche_CR" id="visiteur" name="idVisiteur"/>
+                <datalist id="visiteur_fiche_CR">
+                    <?php 
+                    foreach($lesVisiteurs as $unVisiteur){
+                        $id = $unVisiteur['id'];
+                        $nom = $unVisiteur['nom'];
+                        $prennom = $unVisiteur['prenom'];
+                    ?>
+                    <option value="<?php echo $nom . ' ' . $prennom ?>" data-value="<?php echo $id ?>">
+                    <?php } ?>
+                </datalist>
             </div>
         </div>
         <div class="col-md-4">
@@ -40,28 +50,25 @@
 <script>
     $(function(){
         
-        // permet de gérer l'autocomplete de l'input d'id 'visiteur'
-        autocomplete('visiteur', 'getLesVisiteursLike', 'id', ['nom',' ', 'prenom']);
-        
         grise_mois();
         
         $('#visiteur').on('input',function (){
-            $('#moisFichesFraisVisiteur').empty();
-            $('#visiteur').attr('value', '');
-            grise_mois();
+            //$('#moisFichesFraisVisiteur').empty();
+            //$('#visiteur').attr('value', '');
+            //grise_mois();
+            let text = $(this).val();
+            $('#visiteur_fiche_CR').find('option').each(function(){
+                if($(this).val() == text){
+                    recupere_mois($(this).attr('data-value'));
+                }
+            })
+            
         });
         
         $('#moisFichesFraisVisiteur').on('change', function (){
             affiche_frais();
         });
     });
-    
-    function autocomplete_select(event, ui){
-        $('#visiteur').val(ui.item.label);
-        $('#visiteur').attr('value', ui.item.valeur);
-        recupere_mois();
-        return false;
-    }
     
     function grise_mois(){
         $('#moisFichesFraisVisiteur').attr('disabled',true);
@@ -71,13 +78,14 @@
         $('#moisFichesFraisVisiteur').attr('disabled',false);
     }
     
-    function recupere_mois(){
+    function recupere_mois(str_idVisiteur){
         $.ajax({
             type: "POST",
             url: "index.php?uc=validerFrais&action=recupereMois",
             dataType: "json",
             data: {
-                idVisiteur: $('#visiteur').attr('value')
+                ajax: true,
+                str_idVisiteur: str_idVisiteur
             },
             success: function(data){
                 $('#moisFichesFraisVisiteur').empty();
@@ -85,7 +93,7 @@
                         value: '',
                         text : '' 
                     }));
-                $.each(data, function (i, item) {
+                $.each(data.response, function (i, item) {
                     $('#moisFichesFraisVisiteur').append($('<option>', { 
                         value: item.valeur,
                         text : item.label 
@@ -109,8 +117,9 @@
                 url: "index.php?uc=validerFrais&action=afficheFrais",
                 dataType: "html",
                 data: {
-                    idVisiteur: $('#visiteur').attr('value'),
-                    mois: $('#moisFichesFraisVisiteur').val()
+                    ajax: true,
+                    str_idVisiteur: $('#visiteur').attr('value'),
+                    str_mois: $('#moisFichesFraisVisiteur').val()
                 },
                 success: function(data){
                     $('#lesFraisAValider').empty();

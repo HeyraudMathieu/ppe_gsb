@@ -248,3 +248,9 @@ function nbErreurs()
         return count($_REQUEST['erreurs']);
     }
 }
+
+function retourAjax($response, $num_erreur, $str_erreur){
+    $result = [];
+    $result = array('response'=>$response, 'num_erreur'=>$num_erreur, 'str_erreur'=>$str_erreur);
+    echo json_encode($result);
+}

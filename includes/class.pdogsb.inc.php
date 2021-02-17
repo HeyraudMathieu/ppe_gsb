@@ -410,14 +410,16 @@ class PdoGsb
      * @return un tableau associatif de clé un mois -aaaamm- et de valeurs
      *         l'année et le mois correspondant
      */
-    public function getLesMoisDisponibles($idVisiteur)
+    public function getLesMoisDisponibles($idVisiteur, $etatFrais)
     {
         $requetePrepare = PdoGSB::$monPdo->prepare(
             'SELECT fichefrais.mois AS mois FROM fichefrais '
             . 'WHERE fichefrais.idvisiteur = :unIdVisiteur '
+            . 'AND fichefrais.idetat = :etatFrais '
             . 'ORDER BY fichefrais.mois desc'
         );
         $requetePrepare->bindParam(':unIdVisiteur', $idVisiteur, PDO::PARAM_STR);
+        $requetePrepare->bindParam(':etatFrais', $etatFrais, PDO::PARAM_STR);
         $requetePrepare->execute();
         $lesMois = array();
         while ($laLigne = $requetePrepare->fetch()) {
@@ -487,14 +489,15 @@ class PdoGsb
         $requetePrepare->execute();
     }
     
-    public function getLesVisiteursLike($input)
+    public function getLesVisiteursParEtatFiche($etatFiche)
     {
         $requetePrepare = PdoGSB::$monPdo->prepare(
-            'SELECT v.id, v.nom, v.prenom from visiteur v '
-            . 'WHERE v.nom like :input or v.prenom like :input or concat(v.nom, \' \', v.prenom) like :input'
+            'select v.id, v.nom, v.prenom '
+            . 'from visiteur v, fichefrais f '
+            . 'where v.id = f.idvisiteur '
+            . 'and f.idetat = :etatFiche'
         );
-        $input = $input . '%';
-        $requetePrepare->bindParam(':input', $input, PDO::PARAM_STR);
+        $requetePrepare->bindParam(':etatFiche', $etatFiche, PDO::PARAM_STR);
         $requetePrepare->execute();
         $lesVisiteurs = array();
         while ($unVisiteur = $requetePrepare->fetch()) {

@@ -20,9 +20,9 @@ session_start();
 $pdo = PdoGsb::getPdoGsb();
 $estConnecte = estConnecte();
 
-//if(!isset($_POST['ajax'])){
+if(!isset($_POST['ajax'])){
     require 'vues/shared/v_entete.php';
-//}
+}
 
 $uc = filter_input(INPUT_GET, 'uc', FILTER_SANITIZE_STRING);
 if (!$estConnecte) {
@@ -67,6 +67,6 @@ default :
     break;
 }
 
-//if(!isset($_POST['ajax'])){
+if(!isset($_POST['ajax'])){
     require 'vues/shared/v_pied.php';
-//}
+}
