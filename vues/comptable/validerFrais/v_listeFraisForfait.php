@@ -31,14 +31,34 @@
                         <input type="text" id="idFrais_<?php echo $idFrais ?>" 
                                name="lesFrais[<?php echo $idFrais ?>]"
                                size="10" maxlength="5" 
-                               value="<?php echo $quantite ?>" 
-                               class="form-control">
+                               value="<?php echo $quantite ?>"
+                               data-valueInitial="<?php echo $quantite ?>"
+                               class="form-control fraisForfait">
                     </div>
                     <?php
                 }
                 ?>
-                <button class="btn btn-warning" type="button">Annuler les modifications</button>
+                <button class="btn btn-warning" type="button" onclick="annule_modifications_forfait()">Annuler les modifications</button>
             </fieldset>
         </form>
     </div>
 </div>
+
+<script>
+        
+    $(function(){
+       
+       $('.fraisForfait').on('input', function(){
+          $(this).css('background-color','lightgreen');
+       });
+       
+    });
+    
+    function annule_modifications_forfait(){
+        $('.fraisForfait').each(function(){
+            $(this).val($(this).attr('data-valueInitial'));
+            $(this).css('background-color','white');
+        });
+    }
+    
+</script>

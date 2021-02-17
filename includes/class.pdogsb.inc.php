@@ -410,16 +410,25 @@ class PdoGsb
      * @return un tableau associatif de clé un mois -aaaamm- et de valeurs
      *         l'année et le mois correspondant
      */
-    public function getLesMoisDisponibles($idVisiteur, $etatFrais)
+    public function getLesMoisDisponibles($idVisiteur, $etatFrais = null)
     {
-        $requetePrepare = PdoGSB::$monPdo->prepare(
+        if($etatFrais == null){
+            $requetePrepare = PdoGSB::$monPdo->prepare(
             'SELECT fichefrais.mois AS mois FROM fichefrais '
             . 'WHERE fichefrais.idvisiteur = :unIdVisiteur '
-            . 'AND fichefrais.idetat = :etatFrais '
             . 'ORDER BY fichefrais.mois desc'
         );
-        $requetePrepare->bindParam(':unIdVisiteur', $idVisiteur, PDO::PARAM_STR);
+        } else {
+            $requetePrepare = PdoGSB::$monPdo->prepare(
+                'SELECT fichefrais.mois AS mois FROM fichefrais '
+                . 'WHERE fichefrais.idvisiteur = :unIdVisiteur '
+                . 'AND fichefrais.idetat = :etatFrais '
+                . 'ORDER BY fichefrais.mois desc'
+            );
         $requetePrepare->bindParam(':etatFrais', $etatFrais, PDO::PARAM_STR);
+        }
+        
+        $requetePrepare->bindParam(':unIdVisiteur', $idVisiteur, PDO::PARAM_STR);
         $requetePrepare->execute();
         $lesMois = array();
         while ($laLigne = $requetePrepare->fetch()) {

@@ -24,7 +24,7 @@
         <div class="col-md-4">
             <label for="visiteur" class="col-md-6">Choisir le visiteur : </label>
             <div class="col-md-6">
-                <input list="visiteur_fiche_CR" id="visiteur" name="idVisiteur"/>
+                <input list="visiteur_fiche_CR" id="visiteur" name="idVisiteur" data-value=""/>
                 <datalist id="visiteur_fiche_CR">
                     <?php 
                     foreach($lesVisiteurs as $unVisiteur){
@@ -46,7 +46,7 @@
         </div>
     </div>
 </div>
-<div id="lesFraisAValider"></div>
+<div id="lesFrais"></div>
 <script>
     $(function(){
         
@@ -59,7 +59,8 @@
             let text = $(this).val();
             $('#visiteur_fiche_CR').find('option').each(function(){
                 if($(this).val() == text){
-                    recupere_mois($(this).attr('data-value'));
+                    $('#visiteur').attr('data-value',$(this).attr('data-value'));
+                    recupere_mois();
                 }
             })
             
@@ -78,14 +79,14 @@
         $('#moisFichesFraisVisiteur').attr('disabled',false);
     }
     
-    function recupere_mois(str_idVisiteur){
+    function recupere_mois(){
         $.ajax({
             type: "POST",
             url: "index.php?uc=validerFrais&action=recupereMois",
             dataType: "json",
             data: {
                 ajax: true,
-                str_idVisiteur: str_idVisiteur
+                str_idVisiteur: $('#visiteur').attr('data-value')
             },
             success: function(data){
                 $('#moisFichesFraisVisiteur').empty();
@@ -118,12 +119,12 @@
                 dataType: "html",
                 data: {
                     ajax: true,
-                    str_idVisiteur: $('#visiteur').attr('value'),
+                    str_idVisiteur: $('#visiteur').attr('data-value'),
                     str_mois: $('#moisFichesFraisVisiteur').val()
                 },
                 success: function(data){
-                    $('#lesFraisAValider').empty();
-                    $('#lesFraisAValider').append(data);
+                    $('#lesFrais').empty();
+                    $('#lesFrais').append(data);
                 },
                 error: function (xhr, thrownError) {
                     console.log(xhr.statusText);

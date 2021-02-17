@@ -34,31 +34,31 @@
                 $date = $unFraisHorsForfait['date'];
                 $montant = $unFraisHorsForfait['montant'];
                 $id = $unFraisHorsForfait['id']; ?>           
-                <tr>
+                <tr class="fraisHorsForfait">
                     <td>
                         <input type="text" id="idFrais_<?php echo $id ?>_date" 
                                name="lesFraisHorsForfait[<?php echo $idFrais ?>_date]"
-                               size="10" maxlength="5" 
                                value="<?php echo $date ?>" 
-                               class="form-control">
+                               data-valueInitial ="<?php echo $date ?>"
+                               class="form-control fraisHorsForfait_<?php echo $id ?>">
                     </td>
                     <td>
                         <input type="text" id="idFrais_<?php echo $id ?>_libelle" 
                                name="lesFraisHorsForfait[<?php echo $idFrais ?>_libelle]"
-                               size="10" maxlength="5" 
-                               value="<?php echo $libelle ?>" 
-                               class="form-control">
+                               value="<?php echo $libelle ?>"
+                               data-valueInitial ="<?php echo $libelle ?>"
+                               class="form-control fraisHorsForfait_<?php echo $id ?>">
                     </td>
                     <td>
                         <input type="text" id="idFrais_<?php echo $id ?>_montant" 
                                name="lesFraisHorsForfait[<?php echo $idFrais ?>_montant]"
-                               size="10" maxlength="5" 
-                               value="<?php echo $montant ?>" 
-                               class="form-control">
+                               value="<?php echo $montant ?>"
+                               data-valueInitial ="<?php echo $montant ?>"
+                               class="form-control fraisHorsForfait_<?php echo $id ?>">
                     </td>
                     <td>
-                        <button class="btn btn-warning" type="button">Annuler les modifications</button>
-                        <button class="btn btn-danger" type="button">Supprimer le frais</button>
+                        <button class="btn btn-warning" type="button" onclick="annule_modifications_horsforfait(<?php echo $id ?>)">Annuler les modifications</button>
+                        <button id="btn_suppr_horsforfait" class="btn btn-danger" type="button" onclick="supprime_fraishorsforfait(<?php echo $id ?>)">Supprimer le frais</button>
                     </td>
                 </tr>
                 <?php
@@ -69,3 +69,30 @@
     </div>
 </div>
 <button class="btn btn-success" type="button">Valider la fiche</button>
+
+<script>
+        
+    $(function(){
+       
+       $('.fraisHorsForfait input').on('input', function(){
+          $(this).css('background-color','lightgreen');
+       });
+       
+    });
+    
+    function annule_modifications_horsforfait(num_ligne){
+        $('.fraisHorsForfait_' + num_ligne).each(function(){
+            $(this).val($(this).attr('data-valueInitial'));
+            $(this).css('background-color','white');
+        });
+        $('#btn_suppr_horsforfait').attr('disabled',false);
+    }
+    
+    function supprime_fraishorsforfait(num_ligne){
+        $('.fraisHorsForfait_' + num_ligne).css('background-color', 'red');
+        let libelle = $('#idFrais_' + num_ligne + '_libelle').val();
+        $('#idFrais_' + num_ligne + '_libelle').val('[SUPPRIME]' + libelle);
+        $('#btn_suppr_horsforfait').attr('disabled',true);
+    }
+    
+</script>
