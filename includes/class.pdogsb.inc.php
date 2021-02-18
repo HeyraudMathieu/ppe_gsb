@@ -501,7 +501,7 @@ class PdoGsb
     public function getLesVisiteursParEtatFiche($etatFiche)
     {
         $requetePrepare = PdoGSB::$monPdo->prepare(
-            'select v.id, v.nom, v.prenom '
+            'select distinct v.id, v.nom, v.prenom '
             . 'from visiteur v, fichefrais f '
             . 'where v.id = f.idvisiteur '
             . 'and f.idetat = :etatFiche'
