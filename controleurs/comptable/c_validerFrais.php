@@ -28,10 +28,11 @@ switch ($action) {
         $str_idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
         $lesMois = $pdo->getLesMoisDisponibles($str_idVisiteur, 'CL');
         $response = array();
-        foreach($lesMois as $unMois){
-            $response[] = array('valeur'=>$unMois['mois'], 'label'=>$unMois['numMois'] . '/' . $unMois['numAnnee']);
+        foreach ($lesMois as $unMois) {
+            $response[] = array('valeur' => $unMois['mois'], 'label' => $unMois['numMois'] . '/' . $unMois['numAnnee']);
         }
         retourAjax($response, $num_erreur, $str_erreur);
+        exit;
         break;
     case 'afficheFrais':
         $str_idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
@@ -41,9 +42,28 @@ switch ($action) {
         $lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($str_idVisiteur, $leMois);
         $numAnnee = substr($leMois, 0, 4);
         $numMois = substr($leMois, 4, 2);
-        include 'vues/comptable/validerFrais/v_listeFraisForfait.php';
-        include 'vues/comptable/validerFrais/v_listeFraisHorsForfait.php';
+        include 'vues/comptable/validerFrais/v_listeFrais.php';
         break;
-     
+    case 'validerFrais':
+        $lesFrais = filter_input(INPUT_POST, 'lesFrais', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+        if (lesQteFraisValides($lesFrais)) {
+            $pdo->majFraisForfait($idVisiteur, $mois, $lesFrais);
+        } else {
+            ajouterErreur('Les valeurs des frais doivent être numériques');
+            include 'vues/shared/v_erreurs.php';
+        }
+        $dateFrais = filter_input(INPUT_POST, 'dateFrais', FILTER_SANITIZE_STRING);
+        $libelle = filter_input(INPUT_POST, 'libelle', FILTER_SANITIZE_STRING);
+        $montant = filter_input(INPUT_POST, 'montant', FILTER_VALIDATE_FLOAT);
+        valideInfosFrais($dateFrais, $libelle, $montant);
+        if (nbErreurs() != 0) {
+            include 'vues/shared/v_erreurs.php';
+        } else {
+            
+        }
+        break;
 }
 
+
+
+    
