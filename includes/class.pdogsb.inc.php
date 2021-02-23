@@ -184,6 +184,33 @@ class PdoGsb
         $requetePrepare->execute();
         return $requetePrepare->fetchAll();
     }
+    
+    /**
+     * Retourne sous forme d'un tableau associatif la quantité de frais associé
+     * au montant pour l'utilisateur et le mois concerné
+     *
+     * @param String $idVisiteur ID du visiteur
+     * @param String $mois       Mois sous la forme aaaamm
+     *
+     * @return le montant, la quantité sous la forme d'un tableau
+     * associatif
+     */
+    public function getFraisForfait($idVisiteur, $mois){
+        $requetePrepare = PdoGSB::$monPdo->prepare(
+            'SELECT fraisforfait.montant as montant, '
+            . 'lignefraisforfait.quantite as quantite '
+            . 'FROM fraisforfait '
+            . 'INNER JOIN lignefraisforfait '
+            . 'ON fraisforfait.id = lignefraisforfait.idfraisforfait '
+            . 'WHERE lignefraisforfait.idvisiteur = :unIdVisiteur '
+            . 'AND lignefraisforfait.mois = :unMois '
+            . 'ORDER BY lignefraisforfait.idfraisforfait' 
+        );
+        $requetePrepare->bindParam(':unIdVisiteur', $idVisiteur, PDO::PARAM_STR);
+        $requetePrepare->bindParam(':unMois', $mois, PDO::PARAM_STR);
+        $requetePrepare->execute();
+        return $requetePrepare->fetchAll();
+    }
 
     /**
      * Retourne tous les id de la table FraisForfait

@@ -25,9 +25,9 @@
                     foreach($lesVisiteurs as $unVisiteur){
                         $id = $unVisiteur['id'];
                         $nom = $unVisiteur['nom'];
-                        $prennom = $unVisiteur['prenom'];
+                        $prenom = $unVisiteur['prenom'];
                     ?>
-                    <option value="<?php echo $nom . ' ' . $prennom ?>" data-value="<?php echo $id ?>">
+                    <option value="<?php echo $nom . ' ' . $prenom ?>" data-value="<?php echo $id ?>">
                     <?php } ?>
                 </datalist>
             </div>
@@ -54,7 +54,8 @@
             let text = $(this).val();
             $('#visiteur_fiche_VA').find('option').each(function(){
                 if($(this).val() == text){
-                    recupere_mois($(this).attr('data-value'));
+                    $('#visiteur').attr('data-value',$(this).attr('data-value'));
+                    recupere_mois();
                 }
             })
             
@@ -73,14 +74,14 @@
         $('#moisFichesSuivrePaiement').attr('disabled',false);
     }
     
-    function recupere_mois(str_idVisiteur){
+    function recupere_mois(){
         $.ajax({
             type: "POST",
             url: "index.php?uc=suivrePaiement&action=recupereMois",
             dataType: "json",
             data: {
                 ajax: true,
-                str_idVisiteur: str_idVisiteur
+                str_idVisiteur: $('#visiteur').attr('data-value'),
             },
             success: function(data){
                 $('#moisFichesSuivrePaiement').empty();
@@ -113,7 +114,7 @@
                 dataType: "html",
                 data: {
                     ajax: true,
-                    str_idVisiteur: $('#visiteur').attr('value'),
+                    str_idVisiteur: $('#visiteur').attr('data-value'),
                     str_mois: $('#moisFichesSuivrePaiement').val()
                 },
                 success: function(data){

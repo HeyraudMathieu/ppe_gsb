@@ -31,14 +31,19 @@ switch ($action) {
 
     case 'afficheFichesSuivrePaiement':
         $str_idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
-        $leMois = filter_input(INPUT_POST, 'mois', FILTER_SANITIZE_STRING);
-        $lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($str_idVisiteur, $leMois);
-        $lesFraisForfait = $pdo->getLesFraisForfait($str_idVisiteur, $leMois);
-        $lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($str_idVisiteur, $leMois);
-        $numAnnee = substr($leMois, 0, 4);
-        $numMois = substr($leMois, 4, 2);
-        include 'vues/comptable/validerFrais/v_listeFraisForfait.php';
-        include 'vues/comptable/validerFrais/v_listeFraisHorsForfait.php';
+        $leMois = filter_input(INPUT_POST, 'str_mois', FILTER_SANITIZE_STRING);
+        $fraisForfait = $pdo->getFraisForfait($str_idVisiteur, $leMois);
+        $fraisHorsForfait = $pdo->getLesFraisHorsForfait($str_idVisiteur, $leMois);
+        $totalFraisForfait = totalFraisForfait($fraisForfait);
+        $totalFraisHorsForfait = totalFraisHorsForfait($fraisHorsForfait);
+        $totalFrais = $totalFraisForfait + $totalFraisHorsForfait;
+        include 'vues/comptable/suivrePaiement/v_totalFrais.php';
         break;
+    
+    /**
+     * TODO
+     * 
+     * Bouton Mise en paiement
+     */
     
 }

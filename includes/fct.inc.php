@@ -254,3 +254,29 @@ function retourAjax($response, $num_erreur, $str_erreur){
     $result = array('response'=>$response, 'num_erreur'=>$num_erreur, 'str_erreur'=>$str_erreur);
     echo json_encode($result);
 }
+
+/**
+ * Calcul le montant total des frais forfaitisés
+ * @param type $tableau le tableau de frais forfaitisés
+ * @return type le montant total
+ */
+function totalFraisForfait($tableau){
+    $cpt = 0;
+    for($i = 0; $i < count($tableau); $i++){
+        $cpt += (double)$tableau[$i]['montant'] * (int)$tableau[$i]['quantite'];
+    }
+    return $cpt;
+}
+
+/**
+ * Calcul le montant total des frais hors forfait
+ * @param type $tableau le tableau de frais hors forfait
+ * @return type le montant total
+ */
+function totalFraisHorsForfait($tableau){
+    $cpt = 0;
+    for($i = 0; $i < count($tableau); $i++){
+        $cpt += (double)$tableau[$i]['montant'];
+    }
+    return $cpt;
+}
