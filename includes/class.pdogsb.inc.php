@@ -99,6 +99,18 @@ class PdoGsb {
         $requetePrepare->execute();
         return $requetePrepare->fetch();
     }
+    
+    public function getInfosVisiteur2($login) {
+        $requetePrepare = PdoGsb::$monPdo->prepare(
+                'SELECT visiteur.id AS id, visiteur.nom AS nom, '
+                . 'visiteur.prenom AS prenom, visiteur.iddroit as droit '
+                . 'FROM visiteur '
+                . 'WHERE visiteur.login = :unLogin'
+        );
+        $requetePrepare->bindParam(':unLogin', $login, PDO::PARAM_STR);
+        $requetePrepare->execute();
+        return $requetePrepare->fetch();
+    }
 
     /**
      * Retourne sous forme d'un tableau associatif toutes les lignes de frais
@@ -480,7 +492,7 @@ class PdoGsb {
         $requetePrepare->bindParam(':unMois', $mois, PDO::PARAM_STR);
         $requetePrepare->execute();
     }
-
+    
     public function getLesVisiteursParEtatFiche($etatFiche) {
         $requetePrepare = PdoGSB::$monPdo->prepare(
                 'select distinct v.id, v.nom, v.prenom '
@@ -504,6 +516,11 @@ class PdoGsb {
         return $lesVisiteurs;
     }
 
+    /**
+     * Retourne une liste de tous les Visiteurs
+     * 
+     * @return type
+     */
     public function getAllVisiteurs() {
         $requetePrepare = PdoGSB::$monPdo->prepare(
                 'SELECT v.id from visiteur v'
@@ -513,6 +530,12 @@ class PdoGsb {
         return $visiteurs;
     }
 
+    /**
+     * Met a jour le mot de passe avec l'id passé en paramètre
+     * 
+     * @param type $input
+     * @return type
+     */
     public function updateMdp($input) {
         $leMdp = $this->getMdp($input);
         if (substr($leMdp, 0, 7) != '$2y$10$') { // Récupere les 7 premier caractere du mdp
@@ -524,16 +547,19 @@ class PdoGsb {
                     . ' where id = ' . "'" . $input . "'"
             );
             $requetePrepare2->execute();
-            echo 'mot de passe hashé';
 
             return $mdpHash;
         }else{
-            echo 'mot de passe deja hashé';
-            
             return $leMdp;
         }
     }
 
+    /**
+     * Retourne le mot de passe avec l'id passé en paramètre
+     * 
+     * @param type $input
+     * @return type
+     */
     public function getMdp($input) {
         // Recupere le mdp du visiteur
         $requetePrepare = PdoGSB::$monPdo->prepare(
@@ -547,15 +573,53 @@ class PdoGsb {
 
         return $leMdp;
     }
+    
+    /**
+     * Retourne le mot de passe avec le login passé en paramètre
+     * 
+     * @param type $input
+     * @return type
+     */
+    public function getMdp2($input) {
+        // Recupere le mdp du visiteur
+        $requetePrepare = PdoGSB::$monPdo->prepare(
+                'SELECT v.mdp from visiteur v'
+                . ' WHERE v.login = :input'
+        );
+        $requetePrepare->bindParam(':input', $input, PDO::PARAM_STR);
+        $requetePrepare->execute();
+        $leMdp = $requetePrepare->fetch();
+        $leMdp = $leMdp['mdp'];
 
-    public function checkMdp($input) {
-        $leMdp = $this->getMdp($input);
-        $verif = password_verify('azerty', $leMdp);
-        if ($verif) {
-            echo 'Mot de passe vérifié';
-        } else {
-            echo 'Mauvais mot de passe';
-        }
+        return $leMdp;
+    }
+
+    
+    /**
+     * Retourne une liste de l'id, le nom, le prenom et le login de tous les visiteurs
+     * 
+     * @return type
+     */
+    public function getLesInfos(){
+        $requetePrepare = PdoGSB::$monPdo->prepare(
+                'SELECT v.id, v.nom, v.prenom, v.login from visiteur v'
+        );
+        $requetePrepare->execute();
+        $visiteurs = $requetePrepare->fetchAll();
+        return $visiteurs;
+    }
+    
+    /**
+     * Supprime un visiteur avec l'id passé en paramètre
+     * 
+     * @param type $idUser
+     */
+    public function supprimerUtilisateur($idUser){
+        $requetePrepare = PdoGSB::$monPdo->prepare(
+                'DELETE FROM visiteur '
+                . 'WHERE id = '."'".$idUser."'"
+        );
+        $requetePrepare->execute();
     }
 
 }
