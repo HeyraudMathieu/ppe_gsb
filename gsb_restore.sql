@@ -132,3 +132,8 @@ where id in('a17','b34','e39');
 ----------------------------------------
 
 alter table visiteur modify mdp char(70);
+
+----------------------------------------
+
+update etat set libelle = 'Validée' where id = 'VA';
+insert into etat values ('MP', 'Mise en paiement');
