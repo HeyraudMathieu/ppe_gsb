@@ -14,7 +14,6 @@
  * @version   GIT: <0>
  * @link      http://www.reseaucerta.org Contexte « Laboratoire GSB »
  */
-
 $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
 
 switch ($action) {
@@ -32,7 +31,6 @@ switch ($action) {
             $response[] = array('valeur' => $unMois['mois'], 'label' => $unMois['numMois'] . '/' . $unMois['numAnnee']);
         }
         retourAjax($response, $num_erreur, $str_erreur);
-        exit;
         break;
     case 'afficheFrais':
         $str_idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
@@ -44,26 +42,38 @@ switch ($action) {
         $numMois = substr($leMois, 4, 2);
         include 'vues/comptable/validerFrais/v_listeFrais.php';
         break;
+    case 'verifAvantValidation':
+        $num_erreur = 0;
+        $str_erreur = '';
+        $response = array();
+        $lesFraisForfait = filter_input(INPUT_POST, 'lesFraisForfait', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+        $fraisForfaitIsModif = filter_input(INPUT_POST, 'fraisForfaitIsModif', FILTER_SANITIZE_STRING);
+        $lesFraisHorsForfait = filter_input(INPUT_POST, 'lesFraisHorsForfait', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+        $fraisHorsForfaitIsModif = filter_input(INPUT_POST, 'fraisHorsForfaitIsModif', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+        $idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
+        $mois = filter_input(INPUT_POST, 'str_mois', FILTER_SANITIZE_STRING);
+        if ($fraisForfaitIsModif == 'O') {
+            if (lesQteFraisValides($lesFraisForfait)) {
+                $pdo->majFraisForfait($idVisiteur, $mois, $lesFraisForfait);
+            } else {
+                $num_erreur = -1;
+                $str_erreur = 'Les valeurs des frais doivent être numériques';
+                $response = array('num_erreur' => $num_erreur, 'str_erreur' => $str_erreur);
+            }
+        }
+        echo json_encode($response);
+        break;
     case 'validerFrais':
-        $lesFrais = filter_input(INPUT_POST, 'lesFrais', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        if (lesQteFraisValides($lesFrais)) {
-            $pdo->majFraisForfait($idVisiteur, $mois, $lesFrais);
-        } else {
-            ajouterErreur('Les valeurs des frais doivent être numériques');
-            include 'vues/shared/v_erreurs.php';
-        }
-        $dateFrais = filter_input(INPUT_POST, 'dateFrais', FILTER_SANITIZE_STRING);
-        $libelle = filter_input(INPUT_POST, 'libelle', FILTER_SANITIZE_STRING);
-        $montant = filter_input(INPUT_POST, 'montant', FILTER_VALIDATE_FLOAT);
-        valideInfosFrais($dateFrais, $libelle, $montant);
-        if (nbErreurs() != 0) {
-            include 'vues/shared/v_erreurs.php';
-        } else {
-            
-        }
+
+        /*
+          $dateFrais = filter_input(INPUT_POST, 'dateFrais', FILTER_SANITIZE_STRING);
+          $libelle = filter_input(INPUT_POST, 'libelle', FILTER_SANITIZE_STRING);
+          $montant = filter_input(INPUT_POST, 'montant', FILTER_VALIDATE_FLOAT);
+          valideInfosFrais($dateFrais, $libelle, $montant);
+          if (nbErreurs() != 0) {
+          include 'vues/shared/v_erreurs.php';
+          } else {
+
+          } */
         break;
 }
-
-
-
-    
