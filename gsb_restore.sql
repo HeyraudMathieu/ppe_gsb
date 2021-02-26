@@ -132,3 +132,5 @@ where id in('a17','b34','e39');
 ----------------------------------------
 
 alter table visiteur modify mdp char(70);
+
+insert into visiteur value('ad99','Admin', 'Ad', 'admin' , '$2y$10$ER3ZzcXa.jckow00T0D73OMvKpnSwK5ftOUy0osSfSOIivlJ9oz5m', '1 admin', '83000', 'Toulon', '2020-12-21', 3);

@@ -87,6 +87,7 @@
                                     <a href="index.php?uc=suivrePaiement&action=selectionnerVisiteurMois">
                                         <span class="glyphicon glyphicon-euro"></span>
                                         Suivre le paiement des fiches de frais
+                                <li <?php if (!$uc || $uc == 'accueil') { ?>class="active" <?php } ?>>
                                     </a>
                                 </li>
                             <?php } ?>
