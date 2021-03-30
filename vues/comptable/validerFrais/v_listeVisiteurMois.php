@@ -93,7 +93,7 @@
                     value: '',
                     text: ''
                 }));
-                $.each(data.response, function (i, item) {
+                $.each(data, function (i, item) {
                     $('#moisFichesFraisVisiteur').append($('<option>', {
                         value: item.valeur,
                         text: item.label

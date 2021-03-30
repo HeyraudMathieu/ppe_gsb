@@ -27,6 +27,7 @@
         <link href="./styles/style.css" rel="stylesheet">
 
         <!-- Jquery, Jquery ui, fichier javascript -->
+        <script src="./includes/js/jsFonction.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -130,3 +131,5 @@
                 </h1>
                 <?php
             }
+            ?>
+            <div id="notifications" class="" style="display: none;"></div>

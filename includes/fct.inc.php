@@ -236,12 +236,6 @@ function nbErreurs() {
     }
 }
 
-function retourAjax($response, $num_erreur, $str_erreur) {
-    $result = [];
-    $result = array('response' => $response, 'num_erreur' => $num_erreur, 'str_erreur' => $str_erreur);
-    echo json_encode($result);
-}
-
 function checkMdp($input) {
     $leMdp = $this->getMdp($input);
     $verif = password_verify('azerty', $leMdp);
@@ -276,4 +270,15 @@ function totalFraisHorsForfait($tableau) {
         $cpt += (double) $tableau[$i]['montant'];
     }
     return $cpt;
+}
+
+/**
+ * Compare si les quantités initiales et modifiées d'un frais forfait sont différentes
+ */
+function estModifieQuantiteFraisForfait($tableauACompare,$tableauInitial){
+    $tableauDiff = array_diff($tableauACompare, $tableauInitial);
+    if(count($tableauDiff) > 0){
+        return true;
+    }
+    return false;
 }

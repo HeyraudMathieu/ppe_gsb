@@ -22,15 +22,13 @@ switch ($action) {
         include 'vues/comptable/validerFrais/v_listeVisiteurMois.php';
         break;
     case 'recupereMois':
-        $num_erreur = 0;
-        $str_erreur = '';
         $str_idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
         $lesMois = $pdo->getLesMoisDisponibles($str_idVisiteur, 'CL');
         $response = array();
         foreach ($lesMois as $unMois) {
             $response[] = array('valeur' => $unMois['mois'], 'label' => $unMois['numMois'] . '/' . $unMois['numAnnee']);
         }
-        retourAjax($response, $num_erreur, $str_erreur);
+        echo json_encode($response);
         break;
     case 'afficheFrais':
         $str_idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
@@ -47,12 +45,20 @@ switch ($action) {
         $str_erreur = '';
         $response = array();
         $lesFraisForfait = filter_input(INPUT_POST, 'lesFraisForfait', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        $fraisForfaitIsModif = filter_input(INPUT_POST, 'fraisForfaitIsModif', FILTER_SANITIZE_STRING);
+        
+        break;
+    case 'validerFrais':
+        $lesFraisForfaitInitiaux = $pdo->getLesFraisForfait('a131','202102');
+        $ffinitial = array();
+        foreach($lesFraisForfaitInitiaux as $unFraisForfait){
+            $ffinitial[$unFraisForfait['idfrais']] = $unFraisForfait['quantite'];
+        }
+        //$fraisForfaitIsModif = filter_input(INPUT_POST, 'fraisForfaitIsModif', FILTER_SANITIZE_STRING);
         $lesFraisHorsForfait = filter_input(INPUT_POST, 'lesFraisHorsForfait', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-        $fraisHorsForfaitIsModif = filter_input(INPUT_POST, 'fraisHorsForfaitIsModif', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+        //$fraisHorsForfaitIsModif = filter_input(INPUT_POST, 'fraisHorsForfaitIsModif', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
         $idVisiteur = filter_input(INPUT_POST, 'str_idVisiteur', FILTER_SANITIZE_STRING);
         $mois = filter_input(INPUT_POST, 'str_mois', FILTER_SANITIZE_STRING);
-        if ($fraisForfaitIsModif == 'O') {
+        if (estModifieQuantiteFraisForfait($tableauACompare,$ffinitial)) {
             if (lesQteFraisValides($lesFraisForfait)) {
                 $pdo->majFraisForfait($idVisiteur, $mois, $lesFraisForfait);
             } else {
@@ -62,18 +68,5 @@ switch ($action) {
             }
         }
         echo json_encode($response);
-        break;
-    case 'validerFrais':
-
-        /*
-          $dateFrais = filter_input(INPUT_POST, 'dateFrais', FILTER_SANITIZE_STRING);
-          $libelle = filter_input(INPUT_POST, 'libelle', FILTER_SANITIZE_STRING);
-          $montant = filter_input(INPUT_POST, 'montant', FILTER_VALIDATE_FLOAT);
-          valideInfosFrais($dateFrais, $libelle, $montant);
-          if (nbErreurs() != 0) {
-          include 'vues/shared/v_erreurs.php';
-          } else {
-
-          } */
         break;
 }

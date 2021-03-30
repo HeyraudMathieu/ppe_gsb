@@ -15,7 +15,7 @@
  */
 ?>
 <div class="form-group">
-    <form id="formValiderFiche" onsubmit="verifAvantValidation(event)" method="post" 
+    <form id="formValiderFiche" method="post" 
           action="index.php?uc=validerFrais&action=validerFrais"
           role="form">
         <div class="row">
@@ -40,7 +40,6 @@
                         <?php
                     }
                     ?>
-                    <input id="fraisForfaitIsModif" name="fraisForfaitIsModif" type="hidden" value="N">
                     <button class="btn btn-warning" type="button" onclick="annule_modifications_forfait()">Annuler les modifications</button>
                 </fieldset>
             </div>
@@ -91,7 +90,6 @@
                                 <td>
                                     <button class="btn btn-warning" type="button" onclick="annule_modifications_horsforfait(<?php echo $idFraisHorsForfait ?>)">Annuler les modifications</button>
                                     <button id="btn_suppr_horsforfait_<?php echo $idFraisHorsForfait ?>" class="btn btn-danger" type="button" onclick="supprime_fraishorsforfait(<?php echo $idFraisHorsForfait ?>)">Supprimer le frais</button>
-                                    <input id="<?php echo $idFraisHorsForfait ?>_isModif" name="fraisHorsForfaitIsModif[<?php echo $idFraisHorsForfait ?>]" type="hidden" value="N">
                                 </td>
                             </tr>
                             <?php
@@ -147,32 +145,18 @@
         $('#btn_suppr_horsforfait_' + num_ligne).attr('disabled', true);
     }
 
-    function verifAvantValidation(event) {
+    $('#formValiderFiche').submit(function () {
         event.preventDefault();
-        let data = $('#formValiderFiche').serializeArray();
-        console.log(data);
-        /*
-         $.ajax({
-            type: "POST",
-            url: "index.php?uc=validerFrais&action=verifAvantValidation",
-            dataType: "html",
-            data: {
-                ajax: true,
-                str_idVisiteur: $('#visiteur').attr('data-value'),
-                str_mois: $('#moisFichesFraisVisiteur').val()
-            },
-            success: function (data) {
-
-            },
-            error: function (xhr, thrownError) {
-                console.log(xhr.statusText);
-                console.log(xhr.responseText);
-                console.log(xhr.status);
-                console.log(thrownError);
+        var form = $(this)[0];
+        var formData = new FormData(form);
+        let lesFraisForfait = [];
+        for(var pair of formData.entries()) {
+            if(pair[0].toString().indexOf("lesFraisForfait") === 0){
+                lesFraisForfait += pair[0];
             }
-        });
-         */
-    }
-    
+        }
+        console.log(lesFraisForfait);
+    });
+
 
 </script>
