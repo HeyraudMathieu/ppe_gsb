@@ -1,3 +1,8 @@
 .header {
     margin-top: 10px;
 }
+
+.linkPDF{
+    color: white !important;
+    float: right;
+}

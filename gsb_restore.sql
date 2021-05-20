@@ -1,8 +1,9 @@
 -- Script de restauration de l'application "GSB Frais"
 
 -- Administration de la base de données
+DROP DATABASE IF EXISTS gsb_frais;
 CREATE DATABASE gsb_frais ;
-GRANT SHOW DATABASES ON *.* TO userGsb@localhost IDENTIFIED BY 'secret';
+GRANT SHOW DATABASES ON *.* TO userGsb@localhost IDENTIFIED BY 'ppegsblmr2021*';
 GRANT ALL PRIVILEGES ON `gsb_frais`.* TO userGsb@localhost;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 USE gsb_frais ;
@@ -123,7 +124,13 @@ insert into droit(libelle)values('Comptable');
 alter table visiteur add column iddroit int not null default 1;
 alter table visiteur add foreign key (iddroit) references droit(id);
 
+insert visiteur value('a283','Lorem', 'Ipsum', 'lipsum', 'azerty' , '1 adresse de la republique' , '83000', 'Toulon', '2020-12-21', 1);
+
 update visiteur
 set iddroit = 2
 where id in('a17','b34','e39');
 ----------------------------------------
+
+alter table visiteur modify mdp char(70);
+
+insert into visiteur value('ad99','Admin', 'Ad', 'admin' , '$2y$10$ER3ZzcXa.jckow00T0D73OMvKpnSwK5ftOUy0osSfSOIivlJ9oz5m', '1 admin', '83000', 'Toulon', '2020-12-21', 3);

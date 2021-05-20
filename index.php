@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Index du projet GSB
  *
@@ -20,9 +21,9 @@ session_start();
 $pdo = PdoGsb::getPdoGsb();
 $estConnecte = estConnecte();
 
-//if(!isset($_POST['ajax'])){
+if (!isset($_POST['ajax'])) {
     require 'vues/shared/v_entete.php';
-//}
+}
 
 $uc = filter_input(INPUT_GET, 'uc', FILTER_SANITIZE_STRING);
 if (!$estConnecte) {
@@ -31,42 +32,48 @@ if (!$estConnecte) {
     $uc = 'accueil';
 }
 switch ($uc) {
-case 'connexion':
-    include 'controleurs/shared/c_connexion.php';
-    break;
-case 'deconnexion':
-    include 'controleurs/shared/c_deconnexion.php';
-    break;
-default :
-    if($_SESSION['droit'] == 1){
-        switch ($uc) {
-            case 'accueil':
-                include 'controleurs/visiteur/c_accueil.php';
-                break;
-            case 'gererFrais':
-                include 'controleurs/visiteur/c_gererFrais.php';
-                break;
-            case 'etatFrais':
-                include 'controleurs/visiteur/c_etatFrais.php';
-                break;
-            default :
-                break;
+    case 'connexion':
+        include 'controleurs/shared/c_connexion.php';
+        break;
+    case 'deconnexion':
+        include 'controleurs/shared/c_deconnexion.php';
+        break;
+    default:
+        if ($_SESSION['droit'] == 1) {
+            switch ($uc) {
+                case 'accueil':
+                    include 'controleurs/visiteur/c_accueil.php';
+                    break;
+                case 'gererFrais':
+                    include 'controleurs/visiteur/c_gererFrais.php';
+                    break;
+                case 'testMdp':
+                    include 'controleurs/visiteur/c_testMdp.php';
+                    break;
+                case 'etatFrais':
+                    include 'controleurs/visiteur/c_etatFrais.php';
+                    break;
+                default:
+                    break;
+            }
+        } else if ($_SESSION['droit'] == 2) {
+            switch ($uc) {
+                case 'accueil':
+                    include 'controleurs/comptable/c_accueil.php';
+                    break;
+                case 'validerFrais':
+                    include 'controleurs/comptable/c_validerFrais.php';
+                    break;
+                case 'suivrePaiement':
+                    include 'controleurs/comptable/c_suivrePaiement.php';
+                    break;
+                default:
+                    break;
+            }
         }
-    } else if($_SESSION['droit'] == 2){
-        switch ($uc) {
-            case 'accueil':
-                include 'controleurs/comptable/c_accueil.php';
-                break;
-            case 'validerFrais':
-                include 'controleurs/comptable/c_validerFrais.php';
-                break;
-            default :
-                break;
-        }
-    }
-    break;
+        break;
 }
 
-//if(!isset($_POST['ajax'])){
+if (!isset($_POST['ajax'])) {
     require 'vues/shared/v_pied.php';
-//}
+}
